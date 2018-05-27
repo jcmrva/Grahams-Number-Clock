@@ -165,7 +165,7 @@ view model =
             model.options.numberGridWidth
 
         digitList =
-            "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid2 w
+            "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid w
 
         lineDiv l p =
             div [] (nbrLine l p w)

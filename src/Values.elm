@@ -13,10 +13,6 @@ posNbrs =
     List.range 0 (String.length last500digits)
 
 
-
--- |> List.map ((+) 1)
-
-
 positions : String -> List String -> Dict String (List Int)
 positions gn rng =
     let
@@ -41,8 +37,8 @@ toNbrPositions i =
         |> (positions ("...." ++ last500digits))
 
 
-toGrid2 : Int -> List ( Int, String ) -> List (List ( Int, String ))
-toGrid2 width numbers =
+toGrid : Int -> List ( Int, String ) -> List (List ( Int, String ))
+toGrid width numbers =
     let
         getPart part =
             List.take width part
@@ -57,25 +53,6 @@ toGrid2 width numbers =
                 toGrid_ (drop part_) ((getPart part_) :: lst) width_
     in
         toGrid_ numbers [] width
-            |> List.reverse
-
-
-toGrid : Int -> String -> List String
-toGrid width str =
-    let
-        getPart strPart =
-            String.left width strPart
-
-        drop =
-            String.dropLeft width
-
-        toGrid_ str_ lst width_ =
-            if String.length str_ == 0 then
-                lst
-            else
-                toGrid_ (drop str_) ((getPart str_) :: lst) width_
-    in
-        toGrid_ str [] width
             |> List.reverse
 
 
