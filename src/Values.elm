@@ -14,14 +14,14 @@ posNbrs =
 
 
 
-        -- |> List.map ((+) 1)
+-- |> List.map ((+) 1)
+
 
 positions : String -> List String -> Dict String (List Int)
 positions gn rng =
     let
         nbrPositions nbr =
             String.indices nbr gn
-
 
         toDict strList dict =
             case strList of
@@ -35,13 +35,34 @@ positions gn rng =
 
 
 toNbrPositions : List Int -> Dict String (List Int)
-toNbrPositions =
-    to2CharList >> (positions last500digits)
+toNbrPositions i =
+    i
+        |> to2CharList
+        |> (positions ("...." ++ last500digits))
 
 
 digitPair : Int -> ( Int, Int )
 digitPair d =
     ( d, d + 1 )
+
+
+toGrid2 : Int -> List ( Int, String ) -> List (List ( Int, String ))
+toGrid2 width numbers =
+    let
+        getPart part =
+            List.take width part
+
+        drop =
+            List.drop width
+
+        toGrid_ part_ lst width_ =
+            if List.isEmpty part_ then
+                lst
+            else
+                toGrid_ (drop part_) ((getPart part_) :: lst) width_
+    in
+        toGrid_ numbers [] width
+            |> List.reverse
 
 
 toGrid : Int -> String -> List String

@@ -141,9 +141,9 @@ view model =
             Dict.get (toString tp |> pad2) dict |> Maybe.withDefault [ 0 ]
 
         currPositions tp =
-            { hhCurr = get tp.hh model.hhPositions
-            , mmCurr = get tp.mm model.mmPositions
-            , ssCurr = get tp.ss model.ssPositions
+            { hh = get tp.hh model.hhPositions
+            , mm = get tp.mm model.mmPositions
+            , ss = get tp.ss model.ssPositions
             }
 
         timePos =
@@ -156,19 +156,35 @@ view model =
 
         digits =
             Values.last500digits
+
+        w =
+            model.options.numberGridWidth
+
+        digitList =
+            "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid2 w
     in
         div []
-            [ div []
-                (nbrLine digits timePos.hhCurr 499)
+            [ --     div []
+              --     (nbrLine (digits |> Utils.toTupledList) timePos.hh 499)
+              -- , div []
+              --     (nbrLine (digits |> Utils.toTupledList) timePos.mm 499)
+              -- , div []
+              --     (nbrLine (digits |> Utils.toTupledList) timePos.ss 499)
+              -- ,
+              div [] [ text <| toString model ]
             , div []
-                (nbrLine digits timePos.mmCurr 499)
-            , div []
-                (nbrLine digits timePos.ssCurr 499)
+                (digitList
+                    |> List.map
+                        (\l ->
+                            div []
+                                (nbrLine l timePos.ss w)
+                        )
+                )
             ]
 
 
-nbrLine : String -> List Int -> number -> List (Html msg)
-nbrLine nbr match w =
+nbrLine : List ( Int, String ) -> List Int -> Int -> List (Html msg)
+nbrLine nbrs match w =
     let
         nbrText =
             Tuple.second >> Html.text
@@ -176,17 +192,20 @@ nbrLine nbr match w =
         nbrId =
             Tuple.first >> toString >> id
 
-        found m l =
-            (List.member m l || List.member (m - 1) l) && (m /= w)
+        found n l =
+            fst n l || snd n l
+
+        fst n l =
+            List.member n l && (n + 1) % w /= 0
+
+        snd n l =
+            List.member (n - 1) l && (n) % w /= 0
 
         getClass n =
-            class <|
-                if found (Tuple.first n) match then
-                    "h"
-                else
-                    "x"
+            if found (Tuple.first n) match then
+                class "h"
+            else
+                class "x"
     in
-        nbr
-            |> Utils.toStringList
-            |> List.indexedMap (,)
+        nbrs
             |> List.map (\t -> Html.div [ getClass t, nbrId t ] [ nbrText t ])

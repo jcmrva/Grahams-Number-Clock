@@ -17,7 +17,7 @@ type MatchPart
 
 
 type Highlight
-    = First
+    = Random
     | All
 
 
