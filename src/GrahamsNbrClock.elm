@@ -11,7 +11,7 @@ import Dict exposing (Dict)
 import Utils
 
 
--- programWithFlags ?
+-- programWithFlags
 
 
 main : Program Never Model Msg
@@ -134,6 +134,10 @@ subscriptions model =
     Time.every model.options.clockResolutionMillis ReceiveTime
 
 
+
+-- VIEW
+
+
 view : Model -> Html Msg
 view model =
     let
@@ -162,24 +166,21 @@ view model =
 
         digitList =
             "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid2 w
-    in
-        div []
-            [ --     div []
-              --     (nbrLine (digits |> Utils.toTupledList) timePos.hh 499)
-              -- , div []
-              --     (nbrLine (digits |> Utils.toTupledList) timePos.mm 499)
-              -- , div []
-              --     (nbrLine (digits |> Utils.toTupledList) timePos.ss 499)
-              -- ,
-              div [] [ text <| toString model ]
-            , div []
+
+        lineDiv l p =
+            div [] (nbrLine l p w)
+
+        gnDiv p =
+            div [ class "gn" ]
                 (digitList
                     |> List.map
-                        (\l ->
-                            div []
-                                (nbrLine l timePos.ss w)
-                        )
+                        (\l -> lineDiv l p)
                 )
+    in
+        div [ id "clock" ]
+            [ gnDiv timePos.hh
+            , gnDiv timePos.mm
+            , gnDiv timePos.ss
             ]
 
 

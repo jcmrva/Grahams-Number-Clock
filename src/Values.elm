@@ -41,11 +41,6 @@ toNbrPositions i =
         |> (positions ("...." ++ last500digits))
 
 
-digitPair : Int -> ( Int, Int )
-digitPair d =
-    ( d, d + 1 )
-
-
 toGrid2 : Int -> List ( Int, String ) -> List (List ( Int, String ))
 toGrid2 width numbers =
     let
