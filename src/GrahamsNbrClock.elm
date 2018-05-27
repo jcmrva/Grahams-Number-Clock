@@ -137,8 +137,8 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     let
-        get x dict =
-            Dict.get (toString x |> pad2) dict |> Maybe.withDefault [ 0 ]
+        get tp dict =
+            Dict.get (toString tp |> pad2) dict |> Maybe.withDefault [ 0 ]
 
         currPositions tp =
             { hhCurr = get tp.hh model.hhPositions
@@ -146,27 +146,24 @@ view model =
             , ssCurr = get tp.ss model.ssPositions
             }
 
-        time =
+        timePos =
             (Maybe.withDefault 0 model.time)
                 |> toTimeParts model.options.hourMode
                 |> currPositions
 
         ellipses =
             div [ class "e" ] [ text "...." ]
+
+        digits =
+            Values.last500digits
     in
         div []
             [ div []
-                (time
-                    |> (\c -> nbrLine Values.last500digits c.hhCurr 499)
-                )
+                (nbrLine digits timePos.hhCurr 499)
             , div []
-                (time
-                    |> (\c -> nbrLine Values.last500digits c.mmCurr 499)
-                )
+                (nbrLine digits timePos.mmCurr 499)
             , div []
-                (time
-                    |> (\c -> nbrLine Values.last500digits c.ssCurr 499)
-                )
+                (nbrLine digits timePos.ssCurr 499)
             ]
 
 
@@ -180,15 +177,16 @@ nbrLine nbr match w =
             Tuple.first >> toString >> id
 
         found m l =
-            (List.member m l || List.member (m - 1) l) && m /= w
+            (List.member m l || List.member (m - 1) l) && (m /= w)
 
-        getClass n match =
-            if found (Tuple.first n) match then
-                class "h"
-            else
-                class "x"
+        getClass n =
+            class <|
+                if found (Tuple.first n) match then
+                    "h"
+                else
+                    "x"
     in
         nbr
             |> Utils.toStringList
             |> List.indexedMap (,)
-            |> List.map (\t -> Html.div [ (getClass t match), nbrId t ] [ nbrText t ])
+            |> List.map (\t -> Html.div [ getClass t, nbrId t ] [ nbrText t ])
