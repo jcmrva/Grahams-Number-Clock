@@ -11,12 +11,12 @@ import Dict exposing (Dict)
 import Utils
 
 
--- programWithFlags
+--
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Html.program
+    Html.programWithFlags
         { init = init
         , view = view
         , update = update
@@ -73,8 +73,12 @@ toTimeParts mode time =
             |> toParts
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    { datetime : Float }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     let
         hhPos =
             (if siteOptionsDefault.hourMode == TwentyFour then
@@ -88,7 +92,7 @@ init =
             mmss |> toNbrPositions
 
         initModel =
-            { time = Just 0
+            { time = Just flags.datetime
             , options = siteOptionsDefault
             , hhPositions = hhPos
             , mmPositions = mmssPos
