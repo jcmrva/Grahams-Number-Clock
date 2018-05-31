@@ -2,7 +2,7 @@
     "version": "1.0.0",
     "summary": "Simple digital clock using the digits of Graham's Number",
     "repository": "https://github.com/jcmrva/grahamsnumberclock.git",
-    "license": "MIT",
+    "license": "BSD3",
     "source-directories": [
         "."
     ],
