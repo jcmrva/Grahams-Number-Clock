@@ -3,15 +3,11 @@ module GrahamsNbrClock exposing (..)
 import Html exposing (Html, div, text, program)
 import Html.Attributes exposing (id, class)
 import Time exposing (Time, second)
-import Task exposing (..)
 import Date exposing (..)
 import Options exposing (..)
 import Values exposing (..)
 import Dict exposing (Dict)
 import Utils
-
-
---
 
 
 main : Program Flags Model Msg
@@ -107,17 +103,13 @@ init flags =
 
 
 type Msg
-    = RequestTime
-    | ReceiveTime Time
+    = ReceiveTime Time
     | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        RequestTime ->
-            ( model, Task.perform ReceiveTime Time.now )
-
         ReceiveTime time ->
             let
                 nextmodel =
@@ -159,12 +151,6 @@ view model =
                 |> toTimeParts model.options.hourMode
                 |> currPositions
 
-        ellipses =
-            div [ class "e" ] [ text "...." ]
-
-        digits =
-            Values.last500digits
-
         w =
             model.options.numberGridWidth
 
@@ -204,7 +190,7 @@ nbrLine nbrs match w =
             List.member n l && (n + 1) % w /= 0
 
         snd n l =
-            List.member (n - 1) l && (n) % w /= 0
+            List.member (n - 1) l && n % w /= 0
 
         getClass n =
             if found (Tuple.first n) match then
