@@ -1,6 +1,6 @@
 module Options exposing (..)
 
-import Time exposing (..)
+import Time exposing (Time)
 
 
 type MatchType
@@ -33,7 +33,7 @@ type alias SiteOptions =
     , hourMode : HourMode
     , background : Bool
     , clockResolutionMillis : Time
-    , rotateOnVerticalDisplay : Bool
+    , rotateOnPortraitDisplay : Bool
     }
 
 
@@ -45,5 +45,5 @@ siteOptionsDefault =
     , hourMode = TwentyFour
     , background = True
     , clockResolutionMillis = 200
-    , rotateOnVerticalDisplay = False
+    , rotateOnPortraitDisplay = False
     }
