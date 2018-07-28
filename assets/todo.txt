@@ -1,0 +1,131 @@
+
+## GNC TODOs
+
+# number matching game
+
+- gameplay basics
+
+game mode can be switched on/off
+selecting a number starts the round
+round ends when the first selected number returns (seconds)
+scorekeeping stops when the round ends
+changing a scoring option cancels the round
+if all selections are de-selected (toggled), round is cancelled
+when a round ends, all selections are reset
+if game mode is toggled off, round is cancelled
+no pausing (can't pause time, duh)
+clock resolution @ ? (lower) ms during game mode only?
+
+- scoring
+
+user-configurable, number of elements factored in (10 max)
+
+elements:
+    - time (ms) between first and last selections (motor skill, memory)
+        low > high, but not zero if 1 occurrance
+    - time started after number last displayed (memory)
+        high > low
+        moderate
+    - time between last selection and number next displayed (memory)
+        low > high
+    - occurrances of the chosen number (memory)
+        high > low
+    - grid proximity (memory, motor skill)
+        sparse (high) > dense (low)
+    - number of occurrances selected (memory, motor skill)
+        all > 1, if none then unscored
+    - assist: can't select non-matching numbers once first is chosen (motor skill)
+        off > on
+        moderate
+    - assist: #selected/#possible UI hint (memory)
+        off > on
+        minor
+    - count of invalid selections (motor skill)
+        0 > max
+        auto-disabled if select assist is turned on
+        log or exp? i.e. 1 is ok-ish but more mistakes = harsher penalties
+        retain fractional penalty if invalid selection is de-selected?
+
+some un-togglable elements?
+    - field size (high > low)
+    - HHMM matching hidden (low) or not (high)
+      not hidden could be an advantage if the selected number is MM
+      penalty for that?
+
+should feel fair regardless of element combination
+don't make the user feel mocked or pitied for changing the scoring
+weights probably won't change if some are turned off
+weight percent, factor, ?
+
+weight emphasis:
+    it's more important to select everything than to be fast
+    and not make invalid selections
+
+examples:
+    15 has 2 occurrances, close together
+    16 has 8 occurrances, spread apart
+    7 has 1 occurrance
+    selecting the 7 right after it appears results in a very low score
+    selecting the 7 just before it appears results in a higher score,
+        but still near the low end of the scale
+    selecting all 16s shortly before they appear results in a much higher score
+        than both 15s, but not if invalid selections are made
+        even if the assist is used on 15 but not 16
+
+
+- UI
+
+reset button?
+score counter on top of the screen? option?
+auto-hide HHMM matching? or only on small format displays?
+option to view score breakdown at round's end? (clears on next round)
+
+standard timekeeping is block highlight
+
+invalid selections (if allowed) obviously incorrect (color/pattern)
+
+option 1:
+    when game mode is on, time (seconds) switches to border highlight
+    mouseover number is solid highlight
+    selected blocks are a different shade than normal?
+    click fill animation?
+    conceptually, blocks waiting to be filled
+    pro: visible change from normal mode, time updates might be less distracting
+    con: 
+
+option 2:
+    time remains block highlight
+    mouseover number is border highlight
+    click fill animation?
+    selected blocks are a different shade than normal
+    if overlap, favor selection
+    pro: time highlights consistent with normal
+    con: border highlight might be less clear about target
+
+option 3:
+    time remains block highlight
+    first selection switches time to border highlight
+    round cancellation resets to block
+    otherwise as option 1
+
+- extras
+
+sound effects?
+daily high score table saved on something like Firebase?
+ eligible only if (max - 2)+ scoring elements turned on?
+
+
+# additional site options
+
+
+
+# display format adaptation
+
+- rotation effect
+
+
+# offline mode
+
+
+
+
