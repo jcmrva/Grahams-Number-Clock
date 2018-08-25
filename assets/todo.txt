@@ -15,10 +15,12 @@ when a round ends, all selections are reset
 if game mode is toggled off, round is cancelled
 no pausing (can't pause time, duh)
 clock resolution @ ? (lower) ms during game mode only?
+won't select numbers outside the 00..59 range
+"need help?" message -> getting started page (if you sit for > 1-2 mins)
 
 - scoring
 
-user-configurable, number of elements factored in (10 max)
+user-configurable, number of elements factored in (8 or 10 max)
 
 elements:
     - time (ms) between first and last selections (motor skill, memory)
@@ -30,13 +32,15 @@ elements:
         low > high
     - occurrances of the chosen number (memory)
         high > low
+        moderate
     - grid proximity (memory, motor skill)
         sparse (high) > dense (low)
     - number of occurrances selected (memory, motor skill)
         all > 1, if none then unscored
+        major
     - assist: can't select non-matching numbers once first is chosen (motor skill)
         off > on
-        moderate
+        minor
     - assist: #selected/#possible UI hint (memory)
         off > on
         minor
@@ -45,6 +49,7 @@ elements:
         auto-disabled if select assist is turned on
         log or exp? i.e. 1 is ok-ish but more mistakes = harsher penalties
         retain fractional penalty if invalid selection is de-selected?
+        moderate-major
 
 some un-togglable elements?
     - field size (high > low)
@@ -117,6 +122,8 @@ daily high score table saved on something like Firebase?
 
 # additional site options
 
+- game mode flag sent from query string
+
 
 
 # display format adaptation
@@ -128,4 +135,12 @@ daily high score table saved on something like Firebase?
 
 
 
+# challenges
+- what element to use?
+- click, touch
 
+
+# pattern finder game
+
+- do something when patterns show up (OO:OO:OO, 12:12:12)
+- scoring?

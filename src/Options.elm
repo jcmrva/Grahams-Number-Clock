@@ -3,6 +3,11 @@ module Options exposing (..)
 import Time exposing (Time)
 
 
+type Theme
+    = Dark
+    | Light
+
+
 type MatchType
     = Split
     | Connected
@@ -34,6 +39,7 @@ type alias SiteOptions =
     , background : Bool
     , clockResolutionMillis : Time
     , rotateOnPortraitDisplay : Bool
+    , theme : Theme
     }
 
 
@@ -46,4 +52,5 @@ siteOptionsDefault =
     , background = True
     , clockResolutionMillis = 200
     , rotateOnPortraitDisplay = False
+    , theme = Light
     }
