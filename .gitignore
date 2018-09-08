@@ -12,6 +12,9 @@
 
 elm-stuff/
 GrahamsNbrClock.js
+experiments/canvas/index.html
+experiments/svg/index.html
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
