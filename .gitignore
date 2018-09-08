@@ -10,7 +10,7 @@
 *.sln.docstates
 
 
-*/elm-stuff/*
+elm-stuff/
 GrahamsNbrClock.js
 
 # User-specific files (MonoDevelop/Xamarin Studio)
