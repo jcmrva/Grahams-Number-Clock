@@ -7,7 +7,8 @@ import Options exposing (..)
 import Values exposing (..)
 import Dict exposing (Dict)
 import Time exposing (..)
-import Utils 
+import Task
+import Utils
 
 
 main : Program Flags Model Msg
@@ -67,7 +68,6 @@ toTimeParts zone mode time =
             { hh = hour, mm = Time.toMinute zone d, ss = Time.toSecond zone d }
     in
         time
-            
             |> toParts
 
 
@@ -86,7 +86,7 @@ init flags =
             )
                 |> toNbrPositions
 
-        mmssPos = 
+        mmssPos =
             mmss |> toNbrPositions
 
         initModel =
@@ -99,7 +99,7 @@ init flags =
             , ssPositions = mmssPos
             }
     in
-        ( initModel, Cmd.none )
+        ( initModel, Task.perform AdjustTimeZone Time.here )
 
 
 
@@ -123,6 +123,9 @@ update msg model =
             in
                 ( nextmodel, Cmd.none )
 
+        AdjustTimeZone z ->
+            ( { model | zone = z }, Cmd.none )
+
         _ ->
             ( model, Cmd.none )
 
@@ -130,7 +133,7 @@ update msg model =
 
 -- SUBSCRIPTIONS
 
- 
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Time.every model.options.clockResolutionMillis ReceiveTime
@@ -138,11 +141,12 @@ subscriptions model =
 
 
 -- VIEW
+
+
 type alias Document msg =
     { title : String
     , body : List (Html msg)
     }
-
 
 
 view : Model -> Document Msg
@@ -187,7 +191,6 @@ view model =
                 ]
             ]
         }
-
 
 
 nbrLine : List ( Int, String ) -> List Int -> Int -> List (Html msg)

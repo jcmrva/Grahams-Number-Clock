@@ -2,6 +2,7 @@ module Options exposing (..)
 
 import Time exposing (..)
 
+
 type Theme
     = Dark
     | Light
@@ -28,7 +29,7 @@ type Highlight
 type HourMode
     = Twelve
     | TwentyFour
- 
+
 
 type alias SoundEffects =
     { inGame : Bool
@@ -59,5 +60,5 @@ siteOptionsDefault =
     , clockResolutionMillis = 200
     , rotateOnPortraitDisplay = False
     , theme = Light
-    , soundEffects = None
+    , soundEffects = Nothing
     }
