@@ -10,7 +10,7 @@ type alias ScoreData =
     , lastWaitTime : Float
     , fieldSize : Int
     }
-
+ 
 
 type alias ScoreType =
     { matchLockAssist : Bool

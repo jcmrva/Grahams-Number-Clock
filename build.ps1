@@ -1,6 +1,6 @@
 
-Set-Location .\src
+Set-Location .\app -ErrorAction Stop
 
-elm make .\GrahamsNbrClock.elm --output ..\GrahamsNbrClock.js
+elm make .\src\GrahamsNbrClock.elm --output=GrahamsNbrClock.js
 
 Set-Location ..

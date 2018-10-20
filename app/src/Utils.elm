@@ -8,4 +8,5 @@ toStringList =
 
 toTupledList : String -> List ( Int, String )
 toTupledList =
-    toStringList >> List.indexedMap (,)
+    toStringList >> List.indexedMap Tuple.pair
+ 

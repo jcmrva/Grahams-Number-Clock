@@ -1,18 +1,18 @@
 module GrahamsNbrClock exposing (..)
 
-import Html exposing (Html, div, text, program)
+import Browser
+import Html exposing (Html, div, text)
 import Html.Attributes exposing (id, class)
-import Time exposing (Time, second)
-import Date exposing (..)
 import Options exposing (..)
 import Values exposing (..)
 import Dict exposing (Dict)
-import Utils
+import Time exposing (..)
+import Utils 
 
 
 main : Program Flags Model Msg
 main =
-    Html.programWithFlags
+    Browser.document
         { init = init
         , view = view
         , update = update
@@ -25,7 +25,9 @@ main =
 
 
 type alias Model =
-    { time : Maybe Time
+    { title : String
+    , time : Time.Posix
+    , zone : Time.Zone
     , options : SiteOptions
     , hhPositions : Dict String (List Int)
     , mmPositions : Dict String (List Int)
@@ -50,22 +52,22 @@ to12Hour hh =
         hh
 
 
-toTimeParts : HourMode -> Time -> TimeParts
-toTimeParts mode time =
+toTimeParts : Time.Zone -> HourMode -> Time.Posix -> TimeParts
+toTimeParts zone mode time =
     let
-        hour mode time =
+        hour =
             case mode of
                 Twelve ->
-                    time |> Date.hour |> to12Hour
+                    time |> Time.toHour zone |> to12Hour
 
                 TwentyFour ->
-                    time |> Date.hour
+                    time |> Time.toHour zone
 
         toParts d =
-            { hh = hour mode d, mm = Date.minute d, ss = Date.second d }
+            { hh = hour, mm = Time.toMinute zone d, ss = Time.toSecond zone d }
     in
         time
-            |> Date.fromTime
+            
             |> toParts
 
 
@@ -84,11 +86,13 @@ init flags =
             )
                 |> toNbrPositions
 
-        mmssPos =
+        mmssPos = 
             mmss |> toNbrPositions
 
         initModel =
-            { time = Just flags.datetime
+            { title = "Graham's Number Clock ↑↑↑"
+            , time = flags.datetime |> floor |> millisToPosix
+            , zone = Time.utc
             , options = siteOptionsDefault
             , hhPositions = hhPos
             , mmPositions = mmssPos
@@ -103,7 +107,9 @@ init flags =
 
 
 type Msg
-    = ReceiveTime Time
+    = ReceiveTime Time.Posix
+    | AdjustTimeZone Time.Zone
+    | ChangeTitle String
     | NoOp
 
 
@@ -113,18 +119,18 @@ update msg model =
         ReceiveTime time ->
             let
                 nextmodel =
-                    { model | time = Just time }
+                    { model | time = time }
             in
                 ( nextmodel, Cmd.none )
 
-        NoOp ->
+        _ ->
             ( model, Cmd.none )
 
 
 
 -- SUBSCRIPTIONS
 
-
+ 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Time.every model.options.clockResolutionMillis ReceiveTime
@@ -132,13 +138,18 @@ subscriptions model =
 
 
 -- VIEW
+type alias Document msg =
+    { title : String
+    , body : List (Html msg)
+    }
 
 
-view : Model -> Html Msg
+
+view : Model -> Document Msg
 view model =
     let
         get tp dict =
-            Dict.get (toString tp |> pad2) dict |> Maybe.withDefault [ 0 ]
+            Dict.get (String.fromInt tp |> pad2) dict |> Maybe.withDefault [ 0 ]
 
         currPositions tp =
             { hh = get tp.hh model.hhPositions
@@ -147,8 +158,8 @@ view model =
             }
 
         timePos =
-            (Maybe.withDefault 0 model.time)
-                |> toTimeParts model.options.hourMode
+            (model.time)
+                |> toTimeParts model.zone model.options.hourMode
                 |> currPositions
 
         w =
@@ -167,11 +178,16 @@ view model =
                         (\l -> lineDiv l p)
                 )
     in
-        div [ id "clock" ]
-            [ gnDiv timePos.hh
-            , gnDiv timePos.mm
-            , gnDiv timePos.ss
+        { title = model.title
+        , body =
+            [ div [ id "clock" ]
+                [ gnDiv timePos.hh
+                , gnDiv timePos.mm
+                , gnDiv timePos.ss
+                ]
             ]
+        }
+
 
 
 nbrLine : List ( Int, String ) -> List Int -> Int -> List (Html msg)
@@ -181,16 +197,16 @@ nbrLine nbrs match w =
             Tuple.second >> Html.text
 
         nbrId =
-            Tuple.first >> toString >> id
+            Tuple.first >> String.fromInt >> id
 
         found n l =
             fst n l || snd n l
 
         fst n l =
-            List.member n l && (n + 1) % w /= 0
+            List.member n l && modBy (n + 1) w /= 0
 
         snd n l =
-            List.member (n - 1) l && n % w /= 0
+            List.member (n - 1) l && modBy n w /= 0
 
         getClass n =
             if found (Tuple.first n) match then

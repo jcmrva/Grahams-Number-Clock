@@ -59,7 +59,7 @@ hour12 =
 hour24 : List Int
 hour24 =
     List.range 0 23
-
+ 
 
 mmss : List Int
 mmss =
@@ -74,7 +74,7 @@ pad2 n =
         n
 
 
-to2CharList : List a -> List String
+to2CharList : List Int -> List String
 to2CharList l =
-    List.map toString l
+    List.map String.fromInt l
         |> List.map pad2

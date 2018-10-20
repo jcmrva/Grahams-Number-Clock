@@ -1,7 +1,6 @@
 module Options exposing (..)
 
-import Time exposing (Time)
-
+import Time exposing (..)
 
 type Theme
     = Dark
@@ -29,7 +28,7 @@ type Highlight
 type HourMode
     = Twelve
     | TwentyFour
-
+ 
 
 type alias SiteOptions =
     { matchPart : MatchPart
@@ -37,7 +36,7 @@ type alias SiteOptions =
     , numberGridWidth : Int
     , hourMode : HourMode
     , background : Bool
-    , clockResolutionMillis : Time
+    , clockResolutionMillis : Float
     , rotateOnPortraitDisplay : Bool
     , theme : Theme
     }
