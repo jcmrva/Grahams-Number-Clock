@@ -1,7 +1,9 @@
 module MatchGame exposing (..)
 
+import Date exposing (Date)
 
-type alias ScoreData =
+
+type alias GameData =
     { occurrances : Int
     , selected : Int
     , invalidSelected : Int
@@ -9,12 +11,46 @@ type alias ScoreData =
     , firstLastElapsedTime : Float
     , lastWaitTime : Float
     , fieldSize : Int
+    , scoreHistory : Maybe List Score
+    }
+
+
+type alias Score =
+    { maxPossible : Int
+    , elementsIncluded : List Element
+    , value : Int
+    , occurredAt : Date
     }
  
+
+type Element
+    = Proximity
+    | Selected
+    | StartDelay
+    | LastWait
+
 
 type alias ScoreType =
     { matchLockAssist : Bool
     , selectionHintAssist : Bool
+    }
+
+
+type InputAllowed
+    = Touch
+    | Mouse
+    | Both
+
+
+type TouchSelectType
+    = Initial
+    | Last
+
+
+type alias Options =
+    { touchSelects : TouchSelectType
+    , inputAllowed : InputAllowed
+    , showScoreInProgress : Bool
     }
 
 

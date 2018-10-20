@@ -30,6 +30,12 @@ type HourMode
     | TwentyFour
  
 
+type alias SoundEffects =
+    { inGame : Bool
+    , clock : Bool
+    }
+
+
 type alias SiteOptions =
     { matchPart : MatchPart
     , highlight : Highlight
@@ -39,6 +45,7 @@ type alias SiteOptions =
     , clockResolutionMillis : Float
     , rotateOnPortraitDisplay : Bool
     , theme : Theme
+    , soundEffects : Maybe SoundEffects
     }
 
 
@@ -52,4 +59,5 @@ siteOptionsDefault =
     , clockResolutionMillis = 200
     , rotateOnPortraitDisplay = False
     , theme = Light
+    , soundEffects = None
     }
