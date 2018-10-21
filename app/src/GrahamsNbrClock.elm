@@ -1,14 +1,14 @@
-module GrahamsNbrClock exposing (..)
+module GrahamsNbrClock exposing (Document, Flags, Model, Msg(..), TimeParts, init, main, nbrLine, subscriptions, to12Hour, toTimeParts, update, view)
 
 import Browser
-import Html exposing (Html, div, text)
-import Html.Attributes exposing (id, class)
-import Options exposing (..)
-import Values exposing (..)
 import Dict exposing (Dict)
-import Time exposing (..)
+import Html exposing (Html, div, text)
+import Html.Attributes exposing (class, id)
+import Options exposing (..)
 import Task
+import Time exposing (..)
 import Utils
+import Values exposing (..)
 
 
 main : Program Flags Model Msg
@@ -47,8 +47,10 @@ to12Hour : Int -> Int
 to12Hour hh =
     if hh > 12 then
         hh - 12
+
     else if hh == 0 then
         12
+
     else
         hh
 
@@ -67,8 +69,8 @@ toTimeParts zone mode time =
         toParts d =
             { hh = hour, mm = Time.toMinute zone d, ss = Time.toSecond zone d }
     in
-        time
-            |> toParts
+    time
+        |> toParts
 
 
 type alias Flags =
@@ -81,6 +83,7 @@ init flags =
         hhPos =
             (if siteOptionsDefault.hourMode == TwentyFour then
                 hour24
+
              else
                 hour12
             )
@@ -99,7 +102,7 @@ init flags =
             , ssPositions = mmssPos
             }
     in
-        ( initModel, Task.perform AdjustTimeZone Time.here )
+    ( initModel, Task.perform AdjustTimeZone Time.here )
 
 
 
@@ -121,7 +124,7 @@ update msg model =
                 nextmodel =
                     { model | time = time }
             in
-                ( nextmodel, Cmd.none )
+            ( nextmodel, Cmd.none )
 
         AdjustTimeZone z ->
             ( { model | zone = z }, Cmd.none )
@@ -162,7 +165,7 @@ view model =
             }
 
         timePos =
-            (model.time)
+            model.time
                 |> toTimeParts model.zone model.options.hourMode
                 |> currPositions
 
@@ -182,15 +185,15 @@ view model =
                         (\l -> lineDiv l p)
                 )
     in
-        { title = model.title
-        , body =
-            [ div [ id "clock" ]
-                [ gnDiv timePos.hh
-                , gnDiv timePos.mm
-                , gnDiv timePos.ss
-                ]
+    { title = model.title
+    , body =
+        [ div [ id "clock" ]
+            [ gnDiv timePos.hh
+            , gnDiv timePos.mm
+            , gnDiv timePos.ss
             ]
-        }
+        ]
+    }
 
 
 nbrLine : List ( Int, String ) -> List Int -> Int -> List (Html msg)
@@ -214,8 +217,9 @@ nbrLine nbrs match w =
         getClass n =
             if found (Tuple.first n) match then
                 class "h"
+
             else
                 class "x"
     in
-        nbrs
-            |> List.map (\t -> Html.div [ getClass t, nbrId t ] [ nbrText t ])
+    nbrs
+        |> List.map (\t -> Html.div [ getClass t, nbrId t ] [ nbrText t ])

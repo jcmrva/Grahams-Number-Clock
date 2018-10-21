@@ -1,4 +1,4 @@
-module Options exposing (..)
+module Options exposing (Highlight(..), HourMode(..), MatchPart(..), MatchType(..), SiteOptions, SoundEffects, Theme(..), siteOptionsDefault)
 
 import Time exposing (..)
 

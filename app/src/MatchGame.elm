@@ -1,4 +1,4 @@
-module MatchGame exposing (..)
+module MatchGame exposing (Element(..), GameData, InputAllowed(..), Options, Proximity(..), Score, ScoreType, TouchSelectType(..), selectionProximity)
 
 import Date exposing (Date)
 
@@ -21,7 +21,7 @@ type alias Score =
     , value : Int
     , occurredAt : Date
     }
- 
+
 
 type Element
     = Proximity

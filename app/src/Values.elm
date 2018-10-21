@@ -1,6 +1,6 @@
-module Values exposing (..)
+module Values exposing (hour12, hour24, last500digits, mmss, pad2, positions, to2CharList, toGrid, toNbrPositions)
 
-import Dict exposing (Dict, insert, empty)
+import Dict exposing (Dict, empty, insert)
 
 
 last500digits : String
@@ -22,14 +22,14 @@ positions gn rng =
                 [] ->
                     dict
     in
-        toDict rng Dict.empty
+    toDict rng Dict.empty
 
 
 toNbrPositions : List Int -> Dict String (List Int)
 toNbrPositions i =
     i
         |> to2CharList
-        |> (positions ("...." ++ last500digits))
+        |> positions ("...." ++ last500digits)
 
 
 toGrid : Int -> List ( Int, String ) -> List (List ( Int, String ))
@@ -44,11 +44,12 @@ toGrid width numbers =
         toGrid_ part_ lst width_ =
             if List.isEmpty part_ then
                 lst
+
             else
-                toGrid_ (drop part_) ((getPart part_) :: lst) width_
+                toGrid_ (drop part_) (getPart part_ :: lst) width_
     in
-        toGrid_ numbers [] width
-            |> List.reverse
+    toGrid_ numbers [] width
+        |> List.reverse
 
 
 hour12 : List Int
@@ -59,7 +60,7 @@ hour12 =
 hour24 : List Int
 hour24 =
     List.range 0 23
- 
+
 
 mmss : List Int
 mmss =
@@ -70,6 +71,7 @@ pad2 : String -> String
 pad2 n =
     if String.length n == 1 then
         "0" ++ n
+
     else
         n
 
