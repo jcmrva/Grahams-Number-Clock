@@ -206,10 +206,10 @@ nbrLine nbrs match w =
             fst n l || snd n l
 
         fst n l =
-            List.member n l && modBy (n + 1) w /= 0
+            List.member n l && (modBy w (n + 1) /= 0)
 
         snd n l =
-            List.member (n - 1) l && modBy n w /= 0
+            List.member (n - 1) l && (modBy w n /= 0)
 
         getClass n =
             if found (Tuple.first n) match then
