@@ -2,7 +2,7 @@ module GrahamsNbrClock exposing (Document, Flags, Model, Msg(..), TimeParts, ini
 
 import Browser
 import Dict exposing (Dict)
-import Html exposing (Html, div, text)
+import Html exposing (Html, div)
 import Html.Attributes exposing (class, id)
 import Options exposing (..)
 import Task

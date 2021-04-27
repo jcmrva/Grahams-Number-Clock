@@ -3,3 +3,5 @@
 The **Graham's Number Clock** highlights the viewer's current hour, minute, and second values within the last 500 digits of Graham's Number. That's it... for now.
 
 [Background image](http://hubblesite.org/image/2795/gallery) from NASA / Hubble.
+https://ellie-app.com/3FGgJr39XSga1
+https://package.elm-lang.org/packages/justinmimbs/time-extra/1.0.1/Time-Extra
