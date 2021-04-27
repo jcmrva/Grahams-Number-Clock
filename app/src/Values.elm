@@ -1,6 +1,6 @@
 module Values exposing (hour12, hour24, last500digits, mmss, pad2, positions, to2CharList, toGrid, toNbrPositions)
 
-import Dict exposing (Dict, empty, insert)
+import Dict exposing (Dict)
 
 
 last500digits : String

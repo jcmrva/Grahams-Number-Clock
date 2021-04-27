@@ -74,7 +74,7 @@ toTimeParts zone mode time =
 
 
 type alias Flags =
-    { datetime : Float }
+    Float
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -94,7 +94,7 @@ init flags =
 
         initModel =
             { title = "Graham's Number Clock ↑↑↑"
-            , time = flags.datetime |> floor |> millisToPosix
+            , time = flags |> floor |> millisToPosix
             , zone = Time.utc
             , options = siteOptionsDefault
             , hhPositions = hhPos
