@@ -1,0 +1,44 @@
+body {
+    background-color: black;
+    background-image: url('assets/SpiralGalaxyNGC3982_crop.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+div {
+    font-size: 1.1em;
+    color: linen;
+}
+
+#clock {
+    margin-top: 5em;
+    text-align: center;
+}
+
+.gn {
+    font-family: 'Courier New', Courier, monospace;
+    display: inline-block;
+    border: 1px solid black;
+    margin: 0.5em;
+    padding: 0.5em;
+    background: rgba(44, 55, 66, 0.8);
+}
+
+.x {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.h {
+    display: inline-block;
+    font-family: 'Courier New', Courier, monospace;
+    color: black;
+    background-color: linen;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}

@@ -1,58 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <title>Graham's Number Clock ↑↑↑</title>
+  <!-- <title>Graham's Number Clock ↑↑↑</title> -->
   <script src="GrahamsNbrClock.js"></script>
-  <style>
-    body {
-      background-color: black;
-      background-image: url('assets/SpiralGalaxyNGC3982_crop.jpg');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      min-width: 100em;
-    }
-
-    div {
-      font-size: 1.1em;
-      color: linen;
-    }
-
-    #clock {
-      margin-top: 1em;
-      text-align: center;
-
-    }
-
-    .gn {
-      font-family: 'Courier New', Courier, monospace;
-      display: inline-block;
-      border: 1px solid black;
-      margin: 0.5em;
-      padding: 0.5em;
-      background: rgba(44, 55, 66, 0.8);
-    }
-
-    .x {
-      display: inline-block;
-      font-family: 'Courier New', Courier, monospace;
-      border: 0px;
-      margin: 0px;
-      padding: 0px;
-    }
-
-    .h {
-      display: inline-block;
-      font-family: 'Courier New', Courier, monospace;
-      color: black;
-      background-color: linen;
-      border: 0px;
-      margin: 0px;
-      padding: 0px;
-    }
-  </style>
+  <link href="style.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 
 <body>
@@ -63,30 +16,7 @@
       node: document.getElementById('app'),
       flags: Date.now()
     });
-    
-    var show = () => {
-      console.log("Orientation type is " + screen.orientation.type);
-      console.log("Orientation angle is " + screen.orientation.angle);
-      console.log(isPortrait());
-
-      if (isPortrait()) {
-        document.body.setAttribute("style", "transform: rotate(90deg);");
-      }
-      else {
-        document.body.setAttribute("style", "transform: rotate(0deg);");        
-      }
-    }
-    var isPortrait = () => {
-      var o = screen.orientation.type;
-      return o.includes('portrait');
-    }
-
-    screen.orientation.addEventListener("change", show);
-    window.onload = show;
   </script>
-  <span>
-    <a href="https://github.com/jcmrva/grahamsnumberclock">source</a>
-  </span>
 
 </body>
 
