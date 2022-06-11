@@ -1,6 +1,7 @@
-module GrahamsNbrClock exposing (Document, Flags, Model, Msg(..), TimeParts, init, main, nbrLine, subscriptions, to12Hour, toTimeParts, update, view)
+module GrahamsNbrClock exposing (main)
 
 import Browser
+import Clock
 import Dict exposing (Dict)
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, id)
@@ -26,8 +27,7 @@ main =
 
 
 type alias Model =
-    { title : String
-    , time : Time.Posix
+    { time : Time.Posix
     , zone : Time.Zone
     , options : SiteOptions
     , hhPositions : Dict String (List Int)
@@ -35,42 +35,6 @@ type alias Model =
     , ssPositions : Dict String (List Int)
     }
 
-
-type alias TimeParts =
-    { hh : Int
-    , mm : Int
-    , ss : Int
-    }
-
-
-to12Hour : Int -> Int
-to12Hour hh =
-    if hh > 12 then
-        hh - 12
-
-    else if hh == 0 then
-        12
-
-    else
-        hh
-
-
-toTimeParts : Time.Zone -> HourMode -> Time.Posix -> TimeParts
-toTimeParts zone mode time =
-    let
-        hour =
-            case mode of
-                Twelve ->
-                    time |> Time.toHour zone |> to12Hour
-
-                TwentyFour ->
-                    time |> Time.toHour zone
-
-        toParts d =
-            { hh = hour, mm = Time.toMinute zone d, ss = Time.toSecond zone d }
-    in
-    time
-        |> toParts
 
 
 type alias Flags =
@@ -93,8 +57,7 @@ init flags =
             mmss |> toNbrPositions
 
         initModel =
-            { title = "Graham's Number Clock ↑↑↑"
-            , time = flags |> floor |> millisToPosix
+            { time = flags |> floor |> millisToPosix
             , zone = Time.utc
             , options = siteOptionsDefault
             , hhPositions = hhPos
@@ -112,8 +75,7 @@ init flags =
 type Msg
     = ReceiveTime Time.Posix
     | AdjustTimeZone Time.Zone
-    | ChangeTitle String
-    | NoOp
+
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -129,8 +91,8 @@ update msg model =
         AdjustTimeZone z ->
             ( { model | zone = z }, Cmd.none )
 
-        _ ->
-            ( model, Cmd.none )
+        -- _ ->
+        --     ( model, Cmd.none )
 
 
 
@@ -155,8 +117,9 @@ type alias Document msg =
 view : Model -> Document Msg
 view model =
     let
-        get tp dict =
-            Dict.get (String.fromInt tp |> pad2) dict |> Maybe.withDefault [ 0 ]
+        get tpart dict =
+            Dict.get (String.fromInt tpart |> pad2) dict
+                |> Maybe.withDefault [ 0 ]
 
         currPositions tp =
             { hh = get tp.hh model.hhPositions
@@ -164,40 +127,40 @@ view model =
             , ss = get tp.ss model.ssPositions
             }
 
-        timePos =
+        timePosn =
             model.time
-                |> toTimeParts model.zone model.options.hourMode
+                |> Clock.toTimeParts model.zone model.options.hourMode
                 |> currPositions
 
-        w =
+        width =
             model.options.numberGridWidth
 
         digitList =
-            "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid w
+            "...." ++ Values.last500digits |> Utils.toTupledList |> toGrid width
 
-        lineDiv l p =
-            div [] (nbrLine l p w)
+        lineDiv line positions =
+            div [] (nbrLine line positions width)
 
-        gnDiv p =
+        gnDiv positions =
             div [ class "gn" ]
                 (digitList
                     |> List.map
-                        (\l -> lineDiv l p)
+                        (\line -> lineDiv line positions)
                 )
     in
-    { title = model.title
+    { title = "Graham's Number Clock ↑↑↑"
     , body =
         [ div [ id "clock" ]
-            [ gnDiv timePos.hh
-            , gnDiv timePos.mm
-            , gnDiv timePos.ss
+            [ gnDiv timePosn.hh
+            , gnDiv timePosn.mm
+            , gnDiv timePosn.ss
             ]
         ]
     }
 
 
 nbrLine : List ( Int, String ) -> List Int -> Int -> List (Html msg)
-nbrLine nbrs match w =
+nbrLine nbrs positions width =
     let
         nbrText =
             Tuple.second >> Html.text
@@ -205,21 +168,21 @@ nbrLine nbrs match w =
         nbrId =
             Tuple.first >> String.fromInt >> id
 
+        fst n l =
+            List.member n l && (modBy width (n + 1) /= 0)
+
+        snd n l =
+            List.member (n - 1) l && (modBy width n /= 0)
+
         found n l =
             fst n l || snd n l
 
-        fst n l =
-            List.member n l && (modBy w (n + 1) /= 0)
-
-        snd n l =
-            List.member (n - 1) l && (modBy w n /= 0)
-
-        getClass n =
-            if found (Tuple.first n) match then
+        cssClass n =
+            if found (Tuple.first n) positions then
                 class "h"
 
             else
                 class "x"
     in
     nbrs
-        |> List.map (\t -> Html.div [ getClass t, nbrId t ] [ nbrText t ])
+        |> List.map (\t -> Html.div [ cssClass t, nbrId t ] [ nbrText t ])
