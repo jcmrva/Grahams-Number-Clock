@@ -25,8 +25,18 @@ siteOptionsDefault : SiteOptions
 siteOptionsDefault =
     { highlight = All
     , numberGridWidth = 24
-    , hourMode = TwentyFour
+    , hourMode = Twelve
     , background = True
     , clockResolutionMillis = 200
     , rotateOnPortraitDisplay = False
     }
+
+
+set12hour : SiteOptions -> SiteOptions
+set12hour options =
+    { options | hourMode = Twelve }
+
+
+set24hour : SiteOptions -> SiteOptions
+set24hour options =
+    { options | hourMode = TwentyFour }

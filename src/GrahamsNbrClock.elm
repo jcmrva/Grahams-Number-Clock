@@ -3,8 +3,9 @@ module GrahamsNbrClock exposing (main)
 import Browser
 import Clock
 import Dict exposing (Dict)
-import Html exposing (Html, div)
-import Html.Attributes exposing (class, id)
+import Html exposing (Html, div, span, label, input, text)
+import Html.Attributes exposing (class, id, type_, checked)
+import Html.Events exposing (onClick)
 import Options exposing (..)
 import Task
 import Time exposing (..)
@@ -34,7 +35,6 @@ type alias Model =
     , mmPositions : Dict String (List Int)
     , ssPositions : Dict String (List Int)
     }
-
 
 
 type alias Flags =
@@ -75,24 +75,32 @@ init flags =
 type Msg
     = ReceiveTime Time.Posix
     | AdjustTimeZone Time.Zone
-
+    | Set12Hour
+    | Set24Hour
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ReceiveTime time ->
+            ( { model | time = time }, Cmd.none )
+
+        AdjustTimeZone zone ->
+            ( { model | zone = zone }, Cmd.none )
+
+        Set12Hour ->
             let
-                nextmodel =
-                    { model | time = time }
+                options = model.options |> set12hour
             in
-            ( nextmodel, Cmd.none )
+            ( { model | options = options, hhPositions = hour12 |> toNbrPositions }
+            , Cmd.none )
 
-        AdjustTimeZone z ->
-            ( { model | zone = z }, Cmd.none )
-
-        -- _ ->
-        --     ( model, Cmd.none )
+        Set24Hour ->
+            let
+                options = model.options |> set24hour
+            in
+            ( { model | options = options, hhPositions = hour24 |> toNbrPositions }
+            , Cmd.none )
 
 
 
@@ -117,6 +125,12 @@ type alias Document msg =
 view : Model -> Document Msg
 view model =
     let
+        toggleMsg =
+            if model.options.hourMode == TwentyFour then
+                Set12Hour
+            else
+                Set24Hour
+
         get tpart dict =
             Dict.get (String.fromInt tpart |> pad2) dict
                 |> Maybe.withDefault [ 0 ]
@@ -150,7 +164,17 @@ view model =
     in
     { title = "Graham's Number Clock ↑↑↑"
     , body =
-        [ div [ id "clock" ]
+        [ div [ class "hour-toggle-text"]
+            [ text "HOUR: 12 / 24"]
+        , div [ class "hour-toggle" ]
+            [ label [ class "switch" ]
+                [ input [ type_ "checkbox", checked (model.options.hourMode == TwentyFour) ]
+                    []
+                , span [ class "toggle" , onClick toggleMsg ]
+                    []
+                ]
+            ]
+        , div [ id "clock" ]
             [ gnDiv timePosn.hh
             , gnDiv timePosn.mm
             , gnDiv timePosn.ss
